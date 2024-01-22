@@ -39,12 +39,13 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public List<Item> findStoreItems(Long storeId) {
-        return itemRepository.findStoreItem(storeId);
+    public List<Item> findStoreItems(Store store) {
+        return itemRepository.findStoreItem(store);
     }
 
     public Item findOne(Long itemId) {
         return itemRepository.findOne(itemId);
     }
+
 
 }

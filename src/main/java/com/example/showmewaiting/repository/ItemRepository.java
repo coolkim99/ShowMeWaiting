@@ -33,10 +33,10 @@ public class ItemRepository {
     }
 
     //가게 메뉴 가져오기 위한 메서드
-    public List<Item> findStoreItem(Long storeId) {
+    public List<Item> findStoreItem(Store store) {
         return em.createQuery("select i from Item i" +
-                "where i.store_id = :store", Item.class)
-                .setParameter("store", storeId)
+                " where i.store = :store", Item.class)
+                .setParameter("store", store)
                 .getResultList();
     }
 }

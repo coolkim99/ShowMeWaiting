@@ -36,6 +36,7 @@ public class Item {
 
         return storeItem;
     }
+
     //생성자
     public void setStore(Store store) {
         this.store = store;
