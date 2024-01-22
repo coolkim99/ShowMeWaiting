@@ -16,9 +16,14 @@ public class Store {
     @Column(name = "store_id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Item> menuItems = new ArrayList<>();
+
+    //생성 메서드
+//    public void createMenu(Store store, ) {
+//        for(Item item : )
+//    }
 }

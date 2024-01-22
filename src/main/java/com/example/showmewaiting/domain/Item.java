@@ -21,12 +21,26 @@ public class Item {
 
     private String name;
     private int price;
+
+    @Column(name = "stock_quantity")
     private int stockQuantity;
 
+
+    //생성 메서드
+    public static Item createItem(Item item, String name, Store store, int price, int stockQuantity) {
+        Item storeItem = new Item();
+        storeItem.setStore(store);
+        storeItem.setName(name);
+        storeItem.setStockQuantity(stockQuantity);
+        storeItem.setPrice(price);
+
+        return storeItem;
+    }
     //생성자
-//    public void setStoreId(Long storeId) {
-//        this.storeId = storeId;
-//    }
+    public void setStore(Store store) {
+        this.store = store;
+        store.getMenuItems().add(this);
+    }
 
     public void setName(String name) {
         this.name = name;

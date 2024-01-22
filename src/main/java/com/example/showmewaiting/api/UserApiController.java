@@ -2,7 +2,6 @@ package com.example.showmewaiting.api;
 
 import com.example.showmewaiting.domain.User;
 import com.example.showmewaiting.domain.UserType;
-import com.example.showmewaiting.dto.AddUserRequest;
 import com.example.showmewaiting.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

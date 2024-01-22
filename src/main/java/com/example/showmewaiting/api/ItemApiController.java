@@ -19,16 +19,15 @@ public class ItemApiController {
     private final ItemService itemService;
 
     @PostMapping("/api/{storeId}/items/new")
-    public CreateItemResponse saveItem(@RequestBody @Valid CreateItemRequest request,
-                                       @PathVariable("storeId") Long storeId) {
+    public CreateItemResponse saveItem(@PathVariable("storeId") Long storeId,
+                                       @RequestBody @Valid CreateItemRequest request) {
         Item item = new Item();
 
         item.setName(request.getName());
         item.setPrice(request.getPrice());
         item.setStockQuantity(request.getStockQuantity());
 
-        Long id = itemService.saveItem(item);
-
+        Long id = itemService.saveItem(item, storeId);
         return new CreateItemResponse(id);
     }
 
@@ -48,9 +47,6 @@ public class ItemApiController {
 
         private int price;
         private int stockQuantity;
-        private Store store;
-
-
 
     }
 }

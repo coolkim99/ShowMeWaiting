@@ -2,7 +2,6 @@ package com.example.showmewaiting.service;
 
 import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.domain.User;
-import com.example.showmewaiting.dto.AddUserRequest;
 import com.example.showmewaiting.repository.StoreRepository;
 import com.example.showmewaiting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
