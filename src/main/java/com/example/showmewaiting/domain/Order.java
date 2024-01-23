@@ -36,4 +36,33 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    //연관관계 메서드
+    public void setUser(User user) {
+        this.user = user;
+        user.getOrders().add(this);
+    }
+
+    private void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    //생성메서드
+    public static Order createOrder(User user, Store store, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setStore(store);
+        order.setOrderDate(LocalDateTime.now());
+        for (OrderItem orderItem: orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER);
+        return order;
+    }
+
+    public void cancel() {
+        this.setStatus(OrderStatus.CANCEL);
+    }
+
 }

@@ -19,8 +19,8 @@ public class Store {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
-    private List<Item> menuItems = new ArrayList<>();
+//    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+//    private List<Item> menuItems = new ArrayList<>();
 
     //생성 메서드
 //    public void createMenu(Store store, ) {

@@ -36,7 +36,7 @@ public class Item {
 
     public void setStore(Store store) {
         this.store = store;
-        //store.getMenuItems().add(this);
+//        store.getMenuItems().add(this);
     }
 
     public void setName(String name) {

@@ -1,17 +1,19 @@
 package com.example.showmewaiting.api;
 
 import com.example.showmewaiting.domain.Item;
+import com.example.showmewaiting.domain.Order;
 import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.repository.StoreRepository;
 import com.example.showmewaiting.service.ItemService;
+import com.example.showmewaiting.service.OrderService;
 import com.example.showmewaiting.service.StoreService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class StoreApiController {
 
     private final StoreService storeService;
+    private final OrderService orderService;
 
     //메뉴 리스트 보여주기
     @GetMapping("/api/{storeId}")
@@ -31,6 +34,13 @@ public class StoreApiController {
                 .collect(Collectors.toList());
 
         return collect;
+    }
+
+    @PutMapping("/api/done")
+    public UpdateOrderResponse updateOrder(@RequestBody @Valid UpdateOrderRequest request) {
+        Long id = request.getId();
+        orderService.orderDone(id);
+        return new UpdateOrderResponse(id);
     }
 
     @Data
@@ -45,6 +55,21 @@ public class StoreApiController {
             name = item.getName();
             price = item.getPrice();
         }
+    }
+
+    @Data
+    static class UpdateOrderResponse {
+        private Long id;
+
+        public UpdateOrderResponse(Long id) {
+            this.id = id;
+        }
+    }
+
+    @Data
+    static class UpdateOrderRequest {
+        @NotNull
+        private Long id;
     }
 
 }
