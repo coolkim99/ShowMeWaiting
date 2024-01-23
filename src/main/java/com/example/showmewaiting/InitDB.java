@@ -42,14 +42,26 @@ public class InitDB {
             user2.setPassword("sdkjfhfdg");
             user2.setName("mega");
 
+            User user3 = new User();
+            user3.setEmail("ediya@gmail.com");
+            user3.setType(STORE);
+            user3.setPassword("sjfhfdg");
+            user3.setName("ediya");
+
             em.persist(user);
             em.persist(user2);
+            em.persist(user3);
 
             Store store = new Store();
             store.setName(user2.getName());
             store.setId(user2.getId());
 
+            Store store2 = new Store();
+            store2.setName(user3.getName());
+            store2.setId(user3.getId());
+
             em.persist(store);
+            em.persist(store2);
 
             Item item = new Item();
             item.setPrice(10000);

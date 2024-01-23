@@ -36,11 +36,11 @@ public class Item {
 
         return storeItem;
     }
-
     //생성자
+
     public void setStore(Store store) {
         this.store = store;
-        store.getMenuItems().add(this);
+        //store.getMenuItems().add(this);
     }
 
     public void setName(String name) {

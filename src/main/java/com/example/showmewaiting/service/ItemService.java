@@ -2,6 +2,7 @@ package com.example.showmewaiting.service;
 
 import com.example.showmewaiting.domain.Item;
 import com.example.showmewaiting.domain.Store;
+import com.example.showmewaiting.exception.SameMenuExsistException;
 import com.example.showmewaiting.repository.ItemRepository;
 import com.example.showmewaiting.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,32 @@ public class ItemService {
     @Transactional
     public Long saveItem(Item item, Long storeId) {
         Store store = storeRepository.findById(storeId);
-        Item newItem = Item.createItem(item, item.getName(), store, item.getPrice(), item.getStockQuantity());
+        Item newItem = new Item();
+
+        //한 매장에 같은 메뉴 있는지 검사
+        if(!validateDuplicate(item, storeId)) {
+            throw new SameMenuExsistException("같은 메뉴가 이미 등록되어 있습니다.");
+        }
+        else {
+            newItem = Item.createItem(item, item.getName(), store, item.getPrice(), item.getStockQuantity());
+            itemRepository.save(newItem);
+            System.out.println(newItem.getName()+ " " +newItem.getStore().getName());
+        }
         return newItem.getId();
+    }
+
+    private boolean validateDuplicate(Item item, Long storeId) {
+        Store store = storeRepository.findById(storeId);
+
+        List<Item> storeItems = itemRepository.findStoreItem(storeId);
+
+        for (Item item1 : storeItems) {
+            System.out.println(item1.getName());
+            if(item1.getName().equals(item.getName())){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Transactional
@@ -39,8 +64,8 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public List<Item> findStoreItems(Store store) {
-        return itemRepository.findStoreItem(store);
+    public List<Item> findStoreItems(Long storeId) {
+        return itemRepository.findStoreItem(storeId);
     }
 
     public Item findOne(Long itemId) {

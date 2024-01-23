@@ -47,6 +47,7 @@ public class ItemApiController {
 
         private int price;
         private int stockQuantity;
+        private Store store;
 
     }
 }
