@@ -22,16 +22,12 @@ public class Item {
     private String name;
     private int price;
 
-    @Column(name = "stock_quantity")
-    private int stockQuantity;
-
 
     //생성 메서드
-    public static Item createItem(Item item, String name, Store store, int price, int stockQuantity) {
+    public static Item createItem(Item item, String name, Store store, int price) {
         Item storeItem = new Item();
         storeItem.setStore(store);
         storeItem.setName(name);
-        storeItem.setStockQuantity(stockQuantity);
         storeItem.setPrice(price);
 
         return storeItem;
@@ -49,10 +45,6 @@ public class Item {
 
     public void setPrice(int price) {
         this.price = price;
-    }
-
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
     }
 
 

@@ -29,7 +29,7 @@ public class ItemService {
             throw new SameMenuExsistException("같은 메뉴가 이미 등록되어 있습니다.");
         }
         else {
-            newItem = Item.createItem(item, item.getName(), store, item.getPrice(), item.getStockQuantity());
+            newItem = Item.createItem(item, item.getName(), store, item.getPrice());
             itemRepository.save(newItem);
             System.out.println(newItem.getName()+ " " +newItem.getStore().getName());
         }
@@ -55,7 +55,6 @@ public class ItemService {
         Item findItem = itemRepository.findOne(id);
         findItem.setName(name);
         findItem.setPrice(price);
-        findItem.setStockQuantity(stockQuantity);
 
         return findItem;
     }

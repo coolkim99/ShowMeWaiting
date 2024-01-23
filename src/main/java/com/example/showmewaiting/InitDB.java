@@ -66,7 +66,6 @@ public class InitDB {
             Item item = new Item();
             item.setPrice(10000);
             item.setStore(store);
-            item.setStockQuantity(3);
             item.setName("americano");
 
             em.persist(item);

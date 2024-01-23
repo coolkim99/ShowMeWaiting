@@ -25,7 +25,6 @@ public class ItemApiController {
 
         item.setName(request.getName());
         item.setPrice(request.getPrice());
-        item.setStockQuantity(request.getStockQuantity());
 
         Long id = itemService.saveItem(item, storeId);
         return new CreateItemResponse(id);
