@@ -2,9 +2,12 @@ package com.example.showmewaiting.service;
 
 import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.domain.User;
+import com.example.showmewaiting.dto.AddUserRequest;
+import com.example.showmewaiting.dto.UserSignInRequestDto;
 import com.example.showmewaiting.repository.StoreRepository;
 import com.example.showmewaiting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,22 +20,30 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     //회원가입
     @Transactional
-    public Long join(User user) {
-
+    public Long join(AddUserRequest user) {
         validateDuplicateMember(user);
-        userRepository.save(user);
+
+        Long id = userRepository.save(User.builder()
+                .email(user.getEmail())
+                .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                .name(user.getName())
+                .type(user.getType())
+                .build());
+
+        User curr = userRepository.findOne(id);
 
         //store이면 store테이블에 저장
-        String userType = String.valueOf(user.getType());
+        String userType = String.valueOf(curr.getType());
         if(userType.equals("STORE")) {
-            Store store = changeToStore(user);
+            Store store = changeToStore(curr);
             storeRepository.save(store);
         }
 
-        return user.getId();
+        return id;
     }
 
     private Store changeToStore(User user) {
@@ -42,10 +53,15 @@ public class UserService {
         return store;
     }
 
-    private void validateDuplicateMember(User user) {
+    private void validateDuplicateMember(AddUserRequest user) {
         List<User> findMembers = userRepository.findByEmail(user.getEmail());
         if(!findMembers.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
+    }
+
+    @Transactional
+    public String login(UserSignInRequestDto user) {
+        return  "";
     }
 }

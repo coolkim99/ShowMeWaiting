@@ -1,15 +1,11 @@
 package com.example.showmewaiting.repository;
 
 import com.example.showmewaiting.domain.User;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Member;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -17,8 +13,9 @@ public class UserRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public void save(User user) {
+    public Long save(User user) {
         em.persist(user);
+        return user.getId();
     }
 
     public User findOne(Long id) {

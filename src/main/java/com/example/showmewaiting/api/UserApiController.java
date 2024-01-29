@@ -1,12 +1,14 @@
 package com.example.showmewaiting.api;
 
-import com.example.showmewaiting.domain.User;
 import com.example.showmewaiting.domain.UserType;
+import com.example.showmewaiting.dto.AddUserRequest;
+import com.example.showmewaiting.dto.UserSignInRequestDto;
 import com.example.showmewaiting.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,17 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApiController {
     private final UserService userService;
 
-    @PostMapping("/api/user")
-    public CreateUserResponse saveUser(@RequestBody @Valid CreateUserRequest request) {
-        User user = new User();
+    @PostMapping("/api/join")
+    public CreateUserResponse saveUser(@RequestBody @Valid AddUserRequest request) {
+        AddUserRequest user = new AddUserRequest();
         user.setEmail(request.getEmail());
         user.setType(request.getType());
         user.setPassword(request.getPassword());
         user.setName(request.getName());
 
+        System.out.println("comes in?");
+
         Long id = userService.join(user);
         return new CreateUserResponse(id);
     }
+
+    @PostMapping("/api/login")
+    public ResponseEntity<String> login(@RequestBody UserSignInRequestDto request) throws Exception {
+        return ResponseEntity.ok().body(userService.login(request));
+    }
+
+
 
     @Data
     static class CreateUserResponse {

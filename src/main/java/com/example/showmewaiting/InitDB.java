@@ -1,8 +1,8 @@
 package com.example.showmewaiting;
 
-import com.example.showmewaiting.domain.Item;
-import com.example.showmewaiting.domain.Store;
-import com.example.showmewaiting.domain.User;
+import com.example.showmewaiting.domain.UserType;
+import com.example.showmewaiting.dto.AddUserRequest;
+import com.example.showmewaiting.service.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -28,48 +28,26 @@ public class InitDB {
     @RequiredArgsConstructor
     static class InitService {
         private final EntityManager em;
+        private final UserService userService;
 
         public void dbInit1() {
-            User user = new User();
-            user.setEmail("seaone.c1@gmail.com");
-            user.setType(CONSUMER);
-            user.setPassword("sdkjfh");
-            user.setName("seaone");
+            AddUserRequest user = createUser("seaone.c1@gmail.com", "sdkgjh", "seaone", CONSUMER);
+            AddUserRequest user1 = createUser("mega@gmail.com", "gjgf", "mega", STORE);
+            AddUserRequest user2 = createUser("ediya@gmail.com", "59e", "ediya", STORE);
 
-            User user2 = new User();
-            user2.setEmail("mega@gmail.com");
-            user2.setType(STORE);
-            user2.setPassword("sdkjfhfdg");
-            user2.setName("mega");
+            userService.join(user);
+            userService.join(user1);
+            userService.join(user2);
 
-            User user3 = new User();
-            user3.setEmail("ediya@gmail.com");
-            user3.setType(STORE);
-            user3.setPassword("sjfhfdg");
-            user3.setName("ediya");
+        }
 
-            em.persist(user);
-            em.persist(user2);
-            em.persist(user3);
-
-            Store store = new Store();
-            store.setName(user2.getName());
-            store.setId(user2.getId());
-
-            Store store2 = new Store();
-            store2.setName(user3.getName());
-            store2.setId(user3.getId());
-
-            em.persist(store);
-            em.persist(store2);
-
-            Item item = new Item();
-            item.setPrice(10000);
-            item.setStore(store);
-            item.setName("americano");
-
-            em.persist(item);
-
+        private AddUserRequest createUser(String email, String password, String name, UserType type) {
+            AddUserRequest user = new AddUserRequest();
+            user.setEmail(email);
+            user.setType(type);
+            user.setPassword(password);
+            user.setName(name);
+            return user;
         }
     }
 }
