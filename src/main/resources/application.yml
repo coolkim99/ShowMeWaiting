@@ -1,0 +1,29 @@
+jwt:
+  header: Authorization
+  secret: DadFufN4Oui8Bfv3ScFj6R9fyJ9hD45E6AGFsXgFsRhT4YSdSb
+  token-validity-in-seconds: '86400'
+spring:
+  security:
+    user:
+      password: fb4b86be-ca38-4703-b083-026a2ad6846c
+      name: user
+  datasource:
+    password: znfzla2ek
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/showwaiting?characterEncoding=UTF-8&serverTimezone=UTC
+  jpa:
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: 'true'
+  h2:
+    console:
+      enabled: 'true'
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
