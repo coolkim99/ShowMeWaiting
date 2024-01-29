@@ -33,7 +33,7 @@ public class UserApiController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<String> login(@RequestBody UserSignInRequestDto request) throws Exception {
+    public ResponseEntity<Boolean> login(@RequestBody UserSignInRequestDto request) throws Exception {
         return ResponseEntity.ok().body(userService.login(request));
     }
 

@@ -22,6 +22,11 @@ public class UserRepository {
         return em.find(User.class, id);
     }
 
+    public User findOneByEmail(String email) {
+        return em.find(User.class, email);
+    }
+
+
     public List<User> findAll() {
         return em.createQuery("select u from User u", User.class)
                 .getResultList();

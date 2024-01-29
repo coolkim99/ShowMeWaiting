@@ -60,8 +60,27 @@ public class UserService {
         }
     }
 
+    private void validateEmail(UserSignInRequestDto user) {
+        List<User> users = userRepository.findByEmail(user.getEmail());
+
+        if (users.isEmpty()) {
+            throw new IllegalArgumentException("가입되지 않은 이메일 입니다.");
+        }
+    }
+
     @Transactional
-    public String login(UserSignInRequestDto user) {
-        return  "";
+    public boolean login(UserSignInRequestDto userDto) {
+        validateEmail(userDto);
+
+        List<User> userList = userRepository.findByEmail(userDto.getEmail());
+        User user = userList.get(0);
+        
+
+        boolean checkPassword = bCryptPasswordEncoder.matches(userDto.getPassword(), user.getPassword());
+        if(!checkPassword) {
+            throw new IllegalStateException("잘못된 비밀번호 입니다.");
+        }
+
+        return true;
     }
 }
