@@ -10,8 +10,8 @@ spring:
   datasource:
     password: znfzla2ek
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    url: jdbc:mysql://localhost:3306/showwaiting?characterEncoding=UTF-8&serverTimezone=UTC
+    username: seaone
+    url: jdbc:mysql://13.125.116.56:3306/showwaitingdb?characterEncoding=UTF-8&serverTimezone=UTC
   jpa:
     show-sql: 'true'
     hibernate:
