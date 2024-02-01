@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StoreApiController {
 
     private final StoreService storeService;
