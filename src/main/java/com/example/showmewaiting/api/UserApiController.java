@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*", allowedHeaders = "*",allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*",allowCredentials = "true")
 public class UserApiController {
     private final UserService userService;
 
