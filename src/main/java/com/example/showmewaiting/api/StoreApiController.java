@@ -1,14 +1,9 @@
 package com.example.showmewaiting.api;
 
 import com.example.showmewaiting.domain.Item;
-import com.example.showmewaiting.domain.Order;
-import com.example.showmewaiting.domain.Store;
-import com.example.showmewaiting.repository.StoreRepository;
-import com.example.showmewaiting.service.ItemService;
 import com.example.showmewaiting.service.OrderService;
 import com.example.showmewaiting.service.StoreService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
@@ -20,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StoreApiController {
 
     private final StoreService storeService;
