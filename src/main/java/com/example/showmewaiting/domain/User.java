@@ -10,10 +10,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
 @Getter @Setter
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 
     @Id @GeneratedValue
@@ -23,7 +27,6 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "name")
     private String name;
 
     @Column(name = "password")
@@ -32,12 +35,15 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType type; //STORE, CONSUMER
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
     //양방향 연관관계가 있다면 한쪽은 JsonIgnore을 해줘야함
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
-    private List<String> roles;
 
     @Builder
     public User(String email, String password, UserType type, String name, String auth) {
@@ -47,7 +53,7 @@ public class User implements UserDetails {
         this.type = type;
     }
 
-    public User() {
+    public User(String subject, String s, Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -56,7 +62,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("user"));
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override

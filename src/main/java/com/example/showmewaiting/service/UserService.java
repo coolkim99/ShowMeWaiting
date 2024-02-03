@@ -4,23 +4,36 @@ import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.domain.User;
 import com.example.showmewaiting.dto.AddUserRequest;
 import com.example.showmewaiting.dto.UserSignInRequestDto;
+import com.example.showmewaiting.exception.ErrorCode;
+import com.example.showmewaiting.exception.UserException;
+import com.example.showmewaiting.jwt.JwtToken;
+import com.example.showmewaiting.jwt.JwtTokenProvider;
 import com.example.showmewaiting.repository.StoreRepository;
 import com.example.showmewaiting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     //회원가입
     @Transactional
@@ -56,7 +69,7 @@ public class UserService {
     private void validateDuplicateMember(AddUserRequest user) {
         List<User> findMembers = userRepository.findByEmail(user.getEmail());
         if(!findMembers.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+            throw new UserException(ErrorCode.DUPLICATED_USER_NAME, String.format("Email :",user.getEmail()));
         }
     }
 
@@ -68,19 +81,34 @@ public class UserService {
         }
     }
 
+//    @Transactional
+//    public boolean login(UserSignInRequestDto userDto) {
+//        validateEmail(userDto);
+//
+//        List<User> userList = userRepository.findByEmail(userDto.getEmail());
+//        User user = userList.get(0);
+//
+//
+//        boolean checkPassword = bCryptPasswordEncoder.matches(userDto.getPassword(), user.getPassword());
+//        if(!checkPassword) {
+//            throw new IllegalStateException("잘못된 비밀번호 입니다.");
+//        }
+//
+//        return true;
+//    }
+
     @Transactional
-    public boolean login(UserSignInRequestDto userDto) {
-        validateEmail(userDto);
+    public JwtToken login(UserSignInRequestDto userDto) {
 
-        List<User> userList = userRepository.findByEmail(userDto.getEmail());
-        User user = userList.get(0);
-        
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword());
 
-        boolean checkPassword = bCryptPasswordEncoder.matches(userDto.getPassword(), user.getPassword());
-        if(!checkPassword) {
-            throw new IllegalStateException("잘못된 비밀번호 입니다.");
-        }
+        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
+        // authenticate 메서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드 실행
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        return true;
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+
+        return jwtToken;
     }
 }

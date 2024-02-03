@@ -1,8 +1,10 @@
 package com.example.showmewaiting.api;
 
+import com.example.showmewaiting.domain.Response;
 import com.example.showmewaiting.domain.UserType;
 import com.example.showmewaiting.dto.AddUserRequest;
 import com.example.showmewaiting.dto.UserSignInRequestDto;
+import com.example.showmewaiting.jwt.JwtToken;
 import com.example.showmewaiting.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -17,7 +19,7 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/api/join")
-    public CreateUserResponse saveUser(@RequestBody @Valid AddUserRequest request) {
+    public ResponseEntity<Response<CreateUserResponse>> saveUser(@RequestBody @Valid AddUserRequest request) {
         AddUserRequest user = new AddUserRequest();
         user.setEmail(request.getEmail());
         user.setType(request.getType());
@@ -27,11 +29,11 @@ public class UserApiController {
         System.out.println("comes in?");
 
         Long id = userService.join(user);
-        return new CreateUserResponse(id);
+        return ResponseEntity.ok().body(Response.success(new CreateUserResponse(id)));
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<Boolean> login(@RequestBody UserSignInRequestDto request) throws Exception {
+    public ResponseEntity<JwtToken> login(@RequestBody UserSignInRequestDto request) throws Exception {
         return ResponseEntity.ok().body(userService.login(request));
     }
 
