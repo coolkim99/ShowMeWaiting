@@ -3,6 +3,7 @@ package com.example.showmewaiting.service;
 import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.domain.User;
 import com.example.showmewaiting.dto.AddUserRequest;
+import com.example.showmewaiting.dto.TokenRequestDto;
 import com.example.showmewaiting.dto.UserSignInRequestDto;
 import com.example.showmewaiting.exception.ErrorCode;
 import com.example.showmewaiting.exception.UserException;
@@ -12,6 +13,7 @@ import com.example.showmewaiting.repository.StoreRepository;
 import com.example.showmewaiting.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate redisTemplate;
 
     //회원가입
     @Transactional
@@ -81,22 +85,7 @@ public class UserService {
         }
     }
 
-//    @Transactional
-//    public boolean login(UserSignInRequestDto userDto) {
-//        validateEmail(userDto);
-//
-//        List<User> userList = userRepository.findByEmail(userDto.getEmail());
-//        User user = userList.get(0);
-//
-//
-//        boolean checkPassword = bCryptPasswordEncoder.matches(userDto.getPassword(), user.getPassword());
-//        if(!checkPassword) {
-//            throw new IllegalStateException("잘못된 비밀번호 입니다.");
-//        }
-//
-//        return true;
-//    }
-
+    //로그인
     @Transactional
     public JwtToken login(UserSignInRequestDto userDto) {
 
@@ -110,5 +99,29 @@ public class UserService {
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
         return jwtToken;
+    }
+
+    //로그아웃
+    @Transactional
+    public void logout(TokenRequestDto tokenRequestDto){
+        // 로그아웃 하고 싶은 토큰이 유효한 지 먼저 검증하기
+        if (!jwtTokenProvider.validateToken(tokenRequestDto.getAccessToken())){
+            throw new IllegalArgumentException("로그아웃 : 유효하지 않은 토큰입니다.");
+        }
+
+        // Access Token에서 User email을 가져온다
+        Authentication authentication = jwtTokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+        System.out.println(authentication);
+
+        // Redis에서 해당 User email로 저장된 Refresh Token 이 있는지 여부를 확인 후에 있을 경우 삭제를 한다.
+        if (redisTemplate.opsForValue().get("RT:"+authentication.getName())!=null){
+            // Refresh Token을 삭제
+            redisTemplate.delete("RT:"+authentication.getName());
+        }
+
+        // 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장하기
+        Long expiration = jwtTokenProvider.getExpiration(tokenRequestDto.getAccessToken());
+        redisTemplate.opsForValue().set(tokenRequestDto.getAccessToken(),"logout",expiration, TimeUnit.MILLISECONDS);
+
     }
 }

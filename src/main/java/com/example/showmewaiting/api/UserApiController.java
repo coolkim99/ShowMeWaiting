@@ -3,6 +3,7 @@ package com.example.showmewaiting.api;
 import com.example.showmewaiting.domain.Response;
 import com.example.showmewaiting.domain.UserType;
 import com.example.showmewaiting.dto.AddUserRequest;
+import com.example.showmewaiting.dto.TokenRequestDto;
 import com.example.showmewaiting.dto.UserSignInRequestDto;
 import com.example.showmewaiting.jwt.JwtToken;
 import com.example.showmewaiting.service.UserService;
@@ -10,7 +11,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,6 +38,12 @@ public class UserApiController {
     @PostMapping("/api/login")
     public ResponseEntity<JwtToken> login(@RequestBody UserSignInRequestDto request) throws Exception {
         return ResponseEntity.ok().body(userService.login(request));
+    }
+
+    @PostMapping("/api/logout")
+    public ResponseEntity<Void> logout(@RequestBody TokenRequestDto request) {
+        userService.logout(request);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
