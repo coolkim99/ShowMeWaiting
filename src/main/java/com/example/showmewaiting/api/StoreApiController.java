@@ -1,6 +1,8 @@
 package com.example.showmewaiting.api;
 
 import com.example.showmewaiting.domain.Item;
+import com.example.showmewaiting.domain.Response;
+import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.service.OrderService;
 import com.example.showmewaiting.service.StoreService;
 import jakarta.validation.Valid;
@@ -8,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +31,8 @@ public class StoreApiController {
                 .map(o -> new ItemDto(o))
                 .collect(Collectors.toList());
 
+        System.out.println("MenuListApi");
+
         return collect;
     }
 
@@ -36,6 +41,23 @@ public class StoreApiController {
         Long id = request.getId();
         orderService.orderDone(id);
         return new UpdateOrderResponse(id);
+    }
+
+    @GetMapping("/api/storeList")
+    public List<StoreDto> storeList() {
+
+        List<Store> all = storeService.getStoreList();
+        List<StoreDto> collect = all.stream()
+                .map(o -> new StoreDto(o))
+                .collect(Collectors.toList());
+
+        return collect;
+    }
+
+    @GetMapping("api/findStore/{storeId}")
+    public StoreDto findStore(@PathVariable("storeId") Long id) {
+        StoreDto storeDto = new StoreDto(storeService.getStore(id));
+        return storeDto;
     }
 
     @Data
@@ -65,6 +87,17 @@ public class StoreApiController {
     static class UpdateOrderRequest {
         @NotNull
         private Long id;
+    }
+
+    @Data
+    static class StoreDto {
+        private Long storeId;
+        private String name;
+
+        public StoreDto(Store store) {
+            storeId = store.getId();
+            name = store.getName();
+        }
     }
 
 }

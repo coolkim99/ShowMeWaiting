@@ -1,6 +1,7 @@
 package com.example.showmewaiting.jwt;
 
 import com.example.showmewaiting.domain.User;
+import com.example.showmewaiting.dto.UserSignInRequestDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

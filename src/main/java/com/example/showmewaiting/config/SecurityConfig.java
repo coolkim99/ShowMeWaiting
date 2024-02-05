@@ -31,9 +31,11 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 // 해당 API에 대해서는 모든 요청을 허가
+                .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/api/login").permitAll()
                 .requestMatchers("/api/join").permitAll()
                 .requestMatchers("/api/logout").permitAll()
+                .requestMatchers("/api/check").permitAll()
                 // 이 밖에 모든 요청에 대해서 인증을 필요로 한다는 설정
                 .anyRequest().authenticated()
                 .and()

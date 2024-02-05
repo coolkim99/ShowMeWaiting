@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class StoreRepository {
@@ -18,6 +20,11 @@ public class StoreRepository {
 
     public Store findById(Long id) {
         return em.find(Store.class, id);
+    }
+
+    public List<Store> findAll() {
+        return em.createQuery("select s from Store s", Store.class)
+                .getResultList();
     }
 
 }

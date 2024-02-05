@@ -1,5 +1,6 @@
 package com.example.showmewaiting.jwt;
 
+import com.example.showmewaiting.domain.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

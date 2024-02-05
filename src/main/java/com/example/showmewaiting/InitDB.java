@@ -1,5 +1,6 @@
 package com.example.showmewaiting;
 
+import com.example.showmewaiting.domain.Authority;
 import com.example.showmewaiting.domain.UserType;
 import com.example.showmewaiting.dto.AddUserRequest;
 import com.example.showmewaiting.service.UserService;
@@ -31,9 +32,9 @@ public class InitDB {
         private final UserService userService;
 
         public void dbInit1() {
-            AddUserRequest user = createUser("seaone.c1@gmail.com", "sdkgjh", "seaone", CONSUMER);
-            AddUserRequest user1 = createUser("mega@gmail.com", "gjgf", "mega", STORE);
-            AddUserRequest user2 = createUser("ediya@gmail.com", "59e", "ediya", STORE);
+            AddUserRequest user = createUser("seaone.c1@gmail.com", "sdkgjh", "seaone", CONSUMER, Authority.ROLE_USER);
+            AddUserRequest user1 = createUser("mega@gmail.com", "mega", "mega", STORE, Authority.ROLE_USER);
+            AddUserRequest user2 = createUser("ediya@gmail.com", "ediya", "ediya", STORE, Authority.ROLE_USER);
 
             userService.join(user);
             userService.join(user1);
@@ -41,12 +42,13 @@ public class InitDB {
 
         }
 
-        private AddUserRequest createUser(String email, String password, String name, UserType type) {
+        private AddUserRequest createUser(String email, String password, String name, UserType type, Authority authority) {
             AddUserRequest user = new AddUserRequest();
             user.setEmail(email);
             user.setType(type);
             user.setPassword(password);
             user.setName(name);
+            user.setAuthority(authority);
             return user;
         }
     }

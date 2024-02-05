@@ -1,6 +1,7 @@
 package com.example.showmewaiting.service;
 
 import com.example.showmewaiting.domain.Item;
+import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.repository.ItemRepository;
 import com.example.showmewaiting.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,14 @@ public class StoreService {
     //메뉴조회
     public List<Item> getMenuList(Long storeId) {
         return itemRepository.findStoreItem(storeId);
+    }
+
+    public List<Store> getStoreList() {
+        return storeRepository.findAll();
+    }
+
+    public Store getStore(Long storeId) {
+        return storeRepository.findById(storeId);
     }
 
 }

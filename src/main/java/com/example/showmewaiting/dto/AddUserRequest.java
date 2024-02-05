@@ -1,5 +1,6 @@
 package com.example.showmewaiting.dto;
 
+import com.example.showmewaiting.domain.Authority;
 import com.example.showmewaiting.domain.UserType;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,4 +12,5 @@ public class AddUserRequest {
     private String password;
     private UserType type;
     private String name;
+    private Authority authority;
 }

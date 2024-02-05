@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserType type; //STORE, CONSUMER
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
@@ -44,27 +48,26 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
-
     @Builder
-    public User(String email, String password, UserType type, String name, String auth) {
+    public  User(String email, String password, String name, UserType type, Authority authority) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.type = type;
+        this.authority = authority;
     }
 
-    public User(String subject, String s, Collection<? extends GrantedAuthority> authorities) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.type = type;
+    public User(String subject, String email, Collection<? extends GrantedAuthority> authorities) {
+//        this.email = email;
+//        this.name = subject;
+//        this.roles = authorities.stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.toList());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     @Override
