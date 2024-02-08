@@ -43,6 +43,13 @@ public class StoreApiController {
         return new UpdateOrderResponse(id);
     }
 
+    @PutMapping("/api/notDone")
+    public UpdateOrderResponse updateRedoOrder(@RequestBody @Valid UpdateOrderRequest request) {
+        Long id = request.getId();
+        orderService.orderRedo(id);
+        return new UpdateOrderResponse(id);
+    }
+
     @GetMapping("/api/storeList")
     public List<StoreDto> storeList() {
 
@@ -90,7 +97,7 @@ public class StoreApiController {
     }
 
     @Data
-    static class StoreDto {
+    public static class StoreDto {
         private Long storeId;
         private String name;
 

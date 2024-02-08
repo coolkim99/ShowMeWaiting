@@ -23,6 +23,16 @@ public class ItemRepository {
         }
     }
 
+    public boolean delete(Item item) {
+        if(findOne(item.getId()) != null) {
+            em.remove(item);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public Item findOne(Long id) {
         return em.find(Item.class, id);
     }
@@ -39,7 +49,5 @@ public class ItemRepository {
                 .setParameter("storeId", storeId)
                 .getResultList();
     }
-
-    //가게 메뉴 아이템 저장
 
 }

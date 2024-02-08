@@ -27,6 +27,11 @@ public class ItemApiController {
         return new CreateItemResponse(id);
     }
 
+    @DeleteMapping("/api/items/delete")
+    public DeleteItemResponse deleteItem(@RequestBody @Valid DeleteItemRequest request) {
+        return new DeleteItemResponse(itemService.deleteItem(request.getId()));
+    }
+
     @Data
     static class CreateItemResponse {
         private Long id;
@@ -44,6 +49,22 @@ public class ItemApiController {
         private int price;
         private int stockQuantity;
         private Store store;
+
+    }
+
+    @Data
+    static class DeleteItemRequest {
+        private Long id;
+
+    }
+
+    @Data
+    static class DeleteItemResponse {
+        private boolean result;
+
+        public DeleteItemResponse(boolean result) {
+            this.result = result;
+        }
 
     }
 }

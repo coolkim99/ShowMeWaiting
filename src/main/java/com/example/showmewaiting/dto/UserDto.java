@@ -1,5 +1,6 @@
 package com.example.showmewaiting.dto;
 
+import com.example.showmewaiting.domain.User;
 import com.example.showmewaiting.domain.UserType;
 import lombok.Data;
 
@@ -10,6 +11,13 @@ public class UserDto {
         this.email = email;
         this.name = name;
         this.type = type;
+    }
+
+    public UserDto(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.type = user.getType();
     }
 
     private Long id;

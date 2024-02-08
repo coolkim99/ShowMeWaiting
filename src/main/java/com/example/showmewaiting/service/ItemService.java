@@ -72,4 +72,11 @@ public class ItemService {
     }
 
 
+    @Transactional
+    public boolean deleteItem(Long id) {
+        Item item = itemRepository.findOne(id);
+
+        return itemRepository.delete(item);
+
+    }
 }

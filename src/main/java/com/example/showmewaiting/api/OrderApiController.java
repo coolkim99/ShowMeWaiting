@@ -1,7 +1,10 @@
 package com.example.showmewaiting.api;
 
 import com.example.showmewaiting.domain.Order;
+import com.example.showmewaiting.domain.Store;
 import com.example.showmewaiting.domain.User;
+import com.example.showmewaiting.dto.OrderDto;
+import com.example.showmewaiting.dto.StoreOrderDto;
 import com.example.showmewaiting.repository.OrderRepository;
 import com.example.showmewaiting.service.OrderService;
 import jakarta.validation.Valid;
@@ -10,11 +13,15 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequiredArgsConstructor
 public class OrderApiController {
 
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @PostMapping("/api/{storeId}/order/{itemId}")
     public CreateOrderResponse order(@RequestBody @Valid CreateOrderRequest request,
@@ -25,6 +32,18 @@ public class OrderApiController {
 
         Long id = orderService.order(userId, itemId, storeId, count);
         return new CreateOrderResponse(id);
+    }
+
+    @GetMapping("/api/getordering/{storeId}")
+    public List<StoreOrderDto> getOrdering(@PathVariable("storeId") Long storeId) {
+        return orderRepository.findOrdering(storeId);
+    }
+
+    @GetMapping("/api/getdone/{storeId}")
+    public List<StoreOrderDto> getDone(@PathVariable("storeId") Long storeId) {
+
+        List<StoreOrderDto> all = orderService.getDone(storeId);
+        return all;
     }
 
     @Data

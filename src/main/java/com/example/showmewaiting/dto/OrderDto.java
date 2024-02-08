@@ -1,5 +1,6 @@
 package com.example.showmewaiting.dto;
 
+import com.example.showmewaiting.domain.Order;
 import com.example.showmewaiting.domain.OrderStatus;
 import jakarta.persistence.EntityManager;
 import lombok.Data;
@@ -21,5 +22,13 @@ public class OrderDto {
         this.storeId = storeId;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
+    }
+
+    public OrderDto(Order order) {
+        this.orderId = order.getId();
+        this.userId = order.getUser().getId();
+        this.storeId = order.getStore().getId();
+        this.orderDate = order.getOrderDate();
+        this.orderStatus = order.getStatus();
     }
 }
