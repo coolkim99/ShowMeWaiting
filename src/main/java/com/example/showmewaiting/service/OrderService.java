@@ -1,5 +1,6 @@
 package com.example.showmewaiting.service;
 
+import com.example.showmewaiting.api.OrderApiController;
 import com.example.showmewaiting.domain.*;
 import com.example.showmewaiting.dto.StoreOrderDto;
 import com.example.showmewaiting.repository.ItemRepository;
@@ -23,7 +24,7 @@ public class OrderService {
     private final StoreRepository storeRepository;
 
     @Transactional
-    public Long order(Long uesrId, Long itemId, Long storeId, int count) {
+    public OrderApiController.CreateOrderResponse order(Long uesrId, Long itemId, Long storeId, int count) {
         User user = userRepository.findOne(uesrId);
         Item item = itemRepository.findOne(itemId);
         Store store = storeRepository.findById(storeId);
@@ -33,7 +34,10 @@ public class OrderService {
         Order order = Order.createOrder(user, store, orderItem);
 
         orderRepository.save(order);
-        return orderItem.getId();
+
+
+
+        return new OrderApiController.CreateOrderResponse(order.getId(), item.getName(), orderItem.getCount(), order.getOrderDate(), order.getStatus(), order.getStore().getName());
     }
 
     @Transactional
@@ -62,5 +66,10 @@ public class OrderService {
     public void orderRedo(Long orderId) {
         Order order = orderRepository.findOne(orderId);
         order.setStatus(OrderStatus.ORDER);
+    }
+
+    @Transactional
+    public List<StoreOrderDto> getMyOrder(Long userId) {
+        return orderRepository.findMyOrder(userId);
     }
 }

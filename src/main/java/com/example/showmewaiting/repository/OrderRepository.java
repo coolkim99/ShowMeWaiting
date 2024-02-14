@@ -57,4 +57,17 @@ public class OrderRepository {
                 .setParameter("id", id)
                 .getResultList();
     }
+
+    public List<StoreOrderDto> findMyOrder(Long userId) {
+        return em.createQuery(
+                        "select new com.example.showmewaiting.dto.StoreOrderDto(o.id, u.name, s.name, oi.name, oi.count, oi.orderPrice, o.orderDate, o.status)" +
+                                " from Order o" +
+                                " join o.user u" +
+                                " join o.store s" +
+                                " join o.orderItems oi" +
+                                " where o.user.id = :id" , StoreOrderDto.class)
+                .setParameter("id", userId)
+                .getResultList();
+
+    }
 }

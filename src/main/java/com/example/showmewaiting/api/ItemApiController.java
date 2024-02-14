@@ -29,6 +29,7 @@ public class ItemApiController {
 
     @DeleteMapping("/api/items/delete")
     public DeleteItemResponse deleteItem(@RequestBody @Valid DeleteItemRequest request) {
+        System.out.println(request.getId());
         return new DeleteItemResponse(itemService.deleteItem(request.getId()));
     }
 
