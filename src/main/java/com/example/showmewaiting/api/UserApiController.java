@@ -52,11 +52,11 @@ public class UserApiController {
         return ResponseEntity.ok().body(userDto);
     }
 
-    @PostMapping("/api/logout")
-    public ResponseEntity<Void> logout(@RequestBody TokenRequestDto request) {
-        userService.logout(request);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+//    @PostMapping("/api/logout")
+//    public ResponseEntity<Void> logout(@RequestBody TokenRequestDto request) {
+//        userService.logout(request);
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
 
 
